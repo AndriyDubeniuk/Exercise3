@@ -1,37 +1,10 @@
-let response = "";
-let deleteforone = "";
+
 $(document).ready(function() {
     DisplayData();
-
-    $("#buttonOk").click(function() {
-        let arr_id = [];
-        response = "";
-        $(".check-action:checked").each(function(i) {
-            arr_id[i] = $(this).val();
-        })
-
-        if(arr_id.length == 0) {
-            alert("No users selected! Please select a user!");
-        } else {
-            if($("#selectAction").val() == "SetActive") {
-                for(let i = 0; i < arr_id.length; i++) {
-                    SetActivity(arr_id[i], "active");
-                }
-            } else if($("#selectAction").val() == "SetNotActive") {
-                for(let i = 0; i < arr_id.length; i++) {
-                    SetActivity(arr_id[i], "not-active");
-                } 
-            } else if ($("#selectAction").val() == "Delete") {
-                if (confirm("Are you sure you want to delete?")) {
-                    for(let i = 0; i < arr_id.length; i++) {
-                        DeleteUser(arr_id[i]);
-                    } 
-                }
-            } else {
-                alert("No action selected! Please select an action!");
-            }
-        }
-    });
+    var block = $("#allbuttuons").clone();
+    $("#clonebuttons").append(block);
+    block.find(".selectActionUp").removeClass("selectActionUp").addClass("selectActionDown");
+    block.find(".buttonOkUp").removeClass("buttonOkUp").addClass("buttonOkDown");
 });
 
 $(document).on("click", "#all-items", function() {
@@ -47,10 +20,74 @@ $(document).on("click", ".check-action", function() {
     }
 });
 
-$(document).on("click", "#buttonAdd", function() {
+$(document).on("click", ".buttonAdd", function() {
     $("#UserModalLabel").text("Add User");
     $("#formId")[0].reset();
     $('#hiddendata').val('');
+});
+
+$(document).on("click", ".delete-user", function() {
+    if (confirm("Are you sure you want to delete?")) {
+        DeleteUser($(this).val());
+    }
+});
+
+$(document).on("click", ".buttonOkUp", function() {
+    let arr_id = [];
+    $(".check-action:checked").each(function(i) {
+        arr_id[i] = $(this).val();
+    })
+
+    if(arr_id.length == 0) {
+        alert("No users selected! Please select a user!");
+    } else {
+        if($(".selectActionUp").val() == "SetActive") {
+            for(let i = 0; i < arr_id.length; i++) {
+                SetActivity(arr_id[i], "active");
+            }
+        } else if($(".selectActionUp").val() == "SetNotActive") {
+            for(let i = 0; i < arr_id.length; i++) {
+                SetActivity(arr_id[i], "not-active");
+            } 
+        } else if ($(".selectActionUp").val() == "Delete") {
+            if (confirm("Are you sure you want to delete?")) {
+                for(let i = 0; i < arr_id.length; i++) {
+                    DeleteUser(arr_id[i]);
+                } 
+            }
+        } else {
+            alert("No action selected! Please select an action!");
+        }
+    }
+});
+
+$(document).on("click", ".buttonOkDown", function() {
+    let arr_id = [];
+    $(".check-action:checked").each(function(i) {
+        arr_id[i] = $(this).val();
+    })
+
+    if(arr_id.length == 0) {
+        alert("No users selected! Please select a user!");
+    } else {
+        if($(".selectActionDown").val() == "SetActive") {
+            for(let i = 0; i < arr_id.length; i++) {
+                SetActivity(arr_id[i], "active");
+            }
+        } else if($(".selectActionDown").val() == "SetNotActive") {
+            for(let i = 0; i < arr_id.length; i++) {
+                SetActivity(arr_id[i], "not-active");
+            } 
+        } else if ($(".selectActionDown").val() == "Delete") {
+            if (confirm("Are you sure you want to delete?")) {
+                for(let i = 0; i < arr_id.length; i++) {
+                    DeleteUser(arr_id[i]);
+                } 
+            }
+        } else {
+            alert("No action selected! Please select an action!");
+        }
+    }
 });
 
 function CheckFunc() {
@@ -99,20 +136,16 @@ function AddUser(){
 }
 
 function DeleteUser(deleteId) {
-    $.ajax({
-        url:"delete.php",
-        type:"post",
-        data: {
-            deleteSend:deleteId
-        },
-        success:function(data, status) {
-                DisplayData();
-                response += data;
-                deleteforone = data;
-                $('#errors').html(response);
-                $('#errors').html(deleteforone);
-            }
-    });
+        $.ajax({
+            url:"delete.php",
+            type:"post",
+            data: {
+                deleteSend:deleteId
+            },
+            success:function(data, status) {
+                    DisplayData();
+                }
+        });
 }
 
 function SetActivity(activityId,statusUser) {
@@ -125,8 +158,6 @@ function SetActivity(activityId,statusUser) {
         },
         success:function(data, status) {
             DisplayData();
-            response += data;
-            $('#errors').html(response);
         }
     });
 }
@@ -162,7 +193,5 @@ function UpdateDetails() {
     }, function(data, status) {
         $('#user_form_modal').modal('hide');
         DisplayData();
-        response = data;
-        $('#errors').html(response);
     });
 }

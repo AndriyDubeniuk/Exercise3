@@ -28,30 +28,25 @@ if(isset($_POST['hiddendata']) && !empty($_POST['hiddendata'])) {
 
                     $result = mysqli_query($conn,$sql);
 
-                    $response["status"] = "true";
-                    $response["error"] = "null";
-                    $response["user"] = ["id" => $_POST['hiddendata'], "firstname" => $_POST['update_first_name'], "lastname" => $_POST['update_last_name'], "statususer" => $_POST['update_status'], "role" => $_POST['update_role']];
-                    print_r($response);
+                    $responses["status"] = "true";
+                    $responses["error"] = "null";
+                    $responses["user"] = ["id" => $_POST['hiddendata'], "firstname" => $_POST['update_first_name'], "lastname" => $_POST['update_last_name'], "statususer" => $_POST['update_status'], "role" => $_POST['update_role']];
 
                 } else {
-                    $response["status"] = "false";
-                    $response["error"]=["code" => "204", "message" => "role for update not found"];
-                    print_r($response);
+                    $responses["status"] = "false";
+                    $responses["error"]=["code" => "204", "message" => "role for update not found"];
                 }
             } else {
-                $response["status"] = "false";
-                $response["error"]=["code" => "203", "message" => "status for update not found"];
-                print_r($response);
+                $responses["status"] = "false";
+                $responses["error"]=["code" => "203", "message" => "status for update not found"];
             }
         } else {
-            $response["status"] = "false";
-            $response["error"]=["code" => "202", "message" => "last name for update not found"];
-            print_r($response);
+            $responses["status"] = "false";
+            $responses["error"]=["code" => "202", "message" => "last name for update not found"];
         }
     } else {
-        $response["status"] = "false";
-        $response["error"]=["code" => "201", "message" => "first name for update not found"];
-        print_r($response);
+        $responses["status"] = "false";
+        $responses["error"]=["code" => "201", "message" => "first name for update not found"];
     }
     
 }

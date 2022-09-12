@@ -6,11 +6,10 @@ if(isset($_POST['activitySend']) && !empty($_POST['activitySend']) && isset($_PO
     $status = $_POST['statusUserSend'];
     $sql = "UPDATE `crud` SET `status` = '$status' WHERE `id`='$unique'";
     $result = mysqli_query($conn,$sql);
-    $response["status"] = "true";
-    $response["error"] = "null";
-    $response["id"] = $_POST['activitySend'];
-    $response["statusUser"] = $_POST['statusUserSend'];
-    print_r($response);
+    $responses["status"] = "true";
+    $responses["error"] = "null";
+    $responses["id"] = $_POST['activitySend'];
+    $responses["statusUser"] = $_POST['statusUserSend'];
 }
 
 ?>

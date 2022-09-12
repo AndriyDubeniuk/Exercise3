@@ -16,11 +16,21 @@
 <div class="container">
     <div class="row flex-lg-nowrap"> 
         <div class="col">
-                <div>
-                    <button type="button" class="btn btn-outline-secondary w-100 mb-2" id="buttonAdd" data-toggle="modal" data-target="#user_form_modal">
-                        Add User
-                    </button>
-                </div>
+            <div style="display: flex; justify-content: center; margin-bottom: 10px;" id="allbuttuons">
+                <button type="button" class="btn btn-outline-secondary mr-3 buttonAdd" data-toggle="modal" data-target="#user_form_modal">
+                    Add User
+                </button>
+                <select class="form-control border-secondary selectActionUp" style="width: 50%;">
+                <option hidden value>--- Please select an action ---</option>
+                <option value="SetActive">Set active</option>
+                <option value="SetNotActive">Set not active</option>
+                <option value="Delete">Delete</option>
+                </select>
+                <button type="button" class="btn btn-outline-secondary ml-3 buttonOkUp">
+                    OK
+                </button>
+            </div>
+
                     <div class="row flex-lg-nowrap">
                         <div class="col mb-3">
                             <div class="e-panel card">
@@ -39,16 +49,7 @@
                             </div>
                         </div>
                     </div>
-                
-                    <select class="form-control border-secondary forSelectAction " id="selectAction" style="width: 40%;">
-                        <option hidden value>--- Please select an action ---</option>
-                        <option value="SetActive">Set active</option>
-                        <option value="SetNotActive">Set not active</option>
-                        <option value="Delete">Delete</option>
-                    </select>
-                    <button type="button" class="btn btn-outline-secondary w-40 mb-1 forSelectAction" id="buttonOk">
-                            OK
-                    </button>
+                    <div id="clonebuttons"></div>
 
 
                     <!-- Modal -->

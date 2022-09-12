@@ -37,7 +37,7 @@ if(isset($_POST['displaySend']) && !empty($_POST['displaySend'])) {
         <td class="text-center align-middle">
             <div class="btn-group align-top">
                 <button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user_form_modal" onclick="GetDetails('.$row['id'].')">Edit</button>
-                <button class="btn btn-sm btn-outline-secondary badge" onclick="DeleteUser('.$row['id'].')" type="button"><i
+                <button class="btn btn-sm btn-outline-secondary badge delete-user" value='.$row['id'].' type="button"><i
                   class="fa fa-trash"></i></button>
             </div>
         </td>
@@ -49,8 +49,8 @@ if(isset($_POST['displaySend']) && !empty($_POST['displaySend'])) {
     echo $table;
 }
 else {
-    $response["status"] = "false";
-    $response["error"] = ["code" => "1", "message" => "data display error"];
+    $responses["status"] = "false";
+    $responses["error"] = ["code" => "1", "message" => "data display error"];
 }
 
 ?>

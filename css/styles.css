@@ -1,59 +1,60 @@
 body{
-  margin-top:20px;
-  background:#f8f8f8;
-}
-.active-circle {
-  color: green;
-}
-.not-active-circle {
-  color: red;
-}
-
-.switch {
-  display: none;
-}
-
-.statuslabel {
-  cursor: pointer;
-  position: relative;
-}
-
-.statuslabel::after {
-  content: "";
-  width: 40px;
-  height: 15px;
-  background-color: #939393;
-  border-radius: 10px;
-  position: absolute;
-  top: 6px;
-  right: -49px;
-  transition: 0.4s;
-}
-
-.statuslabel::before {
-  content: "";
-  width: 20px;
-  height: 21px;
-  background-color: white;
-  border: 1px solid #939393;
-  border-radius: 50%;
-  position: absolute;
-  right: -27px;
-  top: 3px;
-  z-index: 1;
-  transition: 0.4s;
-}
-
-.switch:checked + .statuslabel::before {
-  background: #3F51B5;
-  right: -50px;
-  transition: 0.4s;
-}
-.switch:checked + .statuslabel::after {
-  background: #9CA5D7; 
-  transition: 0.4s; 
-}
-
-.forSelectAction {
-  display: inline-block;
-}
+    margin-top:20px;
+    background:#f8f8f8;
+  }
+  .active-circle {
+      color: green;
+  }
+  .not-active-circle {
+      color: gray;
+  }
+  
+  .switch {
+    display: none;
+  }
+  
+  .statuslabel {
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .statuslabel::after {
+    content: "";
+    width: 40px;
+    height: 15px;
+    background-color: rgb(201, 201, 201);
+    border-radius: 10px;
+    position: absolute;
+    top: 6px;
+    right: -49px;
+    transition: 0.4s;
+  }
+  
+  .statuslabel::before {
+    content: "";
+    width: 20px;
+    height: 21px;
+    background-color: gray;
+    border-radius: 50%;
+    position: absolute;
+    right: -27px;
+    top: 3px;
+    z-index: 1;
+    transition: 0.4s;
+  }
+  
+  .switch:checked + .statuslabel::before {
+    background: green;
+    right: -50px;
+    transition: 0.4s;
+  }
+  .switch:checked + .statuslabel::after {
+    background: rgb(77, 243, 77); 
+    transition: 0.4s; 
+  }
+  
+  .allbuttons {
+    display: inline-block;
+  }
+  
+  
