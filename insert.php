@@ -14,22 +14,27 @@ if(isset($_POST['first_nameSend']) && !empty($_POST['first_nameSend'])) {
                     $responses["status"] = "true";
                     $responses["error"] = "null";
                     $responses["user"] = ["firstname" => $_POST['first_nameSend'], "lastname" => $_POST['last_nameSend'], "statususer" => $_POST['statusSend'], "role" => $_POST['roleSend']];
+                    echo json_encode($responses);
 
                 } else {
                     $responses["status"] = "false";
                     $responses["error"]=["code" => "104", "message" => "role for add not found"];
+                    echo json_encode($responses);
                 }
             } else {
                 $responses["status"] = "false";
                 $responses["error"]=["code" => "103", "message" => "status for add not found"];
+                echo json_encode($responses);
             }
         } else {
             $responses["status"] = "false";
             $responses["error"]=["code" => "102", "message" => "last name for add not found"];
+            echo json_encode($responses);
         }
     } else {
         $responses["status"] = "false";
         $responses["error"]=["code" => "101", "message" => "first name for add not found"];
+        echo json_encode($responses);
     }
 
 ?>

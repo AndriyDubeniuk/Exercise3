@@ -1,10 +1,10 @@
 
 $(document).ready(function() {
     DisplayData();
-    var block = $("#allbuttuons").clone();
-    $("#clonebuttons").append(block);
-    block.find(".selectActionUp").removeClass("selectActionUp").addClass("selectActionDown");
-    block.find(".buttonOkUp").removeClass("buttonOkUp").addClass("buttonOkDown");
+    let buttons = $("#allbuttuons").clone();
+    $("#clonebuttons").append(buttons);
+    buttons.find(".selectActionUp").removeClass("selectActionUp").addClass("selectActionDown");
+    buttons.find(".buttonOkUp").removeClass("buttonOkUp").addClass("buttonOkDown");
 });
 
 $(document).on("click", "#all-items", function() {
@@ -27,9 +27,7 @@ $(document).on("click", ".buttonAdd", function() {
 });
 
 $(document).on("click", ".delete-user", function() {
-    if (confirm("Are you sure you want to delete?")) {
-        DeleteUser($(this).val());
-    }
+    DeleteConfirm($(this).val());
 });
 
 $(document).on("click", ".buttonOkUp", function() {
@@ -39,7 +37,7 @@ $(document).on("click", ".buttonOkUp", function() {
     })
 
     if(arr_id.length == 0) {
-        alert("No users selected! Please select a user!");
+        AlertWindow("Alert!","No users selected! Please select a user!");
     } else {
         if($(".selectActionUp").val() == "SetActive") {
             for(let i = 0; i < arr_id.length; i++) {
@@ -50,16 +48,17 @@ $(document).on("click", ".buttonOkUp", function() {
                 SetActivity(arr_id[i], "not-active");
             } 
         } else if ($(".selectActionUp").val() == "Delete") {
-            if (confirm("Are you sure you want to delete?")) {
-                for(let i = 0; i < arr_id.length; i++) {
-                    DeleteUser(arr_id[i]);
-                } 
+            for(let i = 0; i < arr_id.length; i++) {
+                DeleteConfirm(arr_id[i]);
             }
         } else {
-            alert("No action selected! Please select an action!");
+            AlertWindow("Alert!","No action selected! Please select an action!");
         }
     }
 });
+
+
+
 
 $(document).on("click", ".buttonOkDown", function() {
     let arr_id = [];
@@ -68,7 +67,7 @@ $(document).on("click", ".buttonOkDown", function() {
     })
 
     if(arr_id.length == 0) {
-        alert("No users selected! Please select a user!");
+        AlertWindow("Alert!","No users selected! Please select a user!");
     } else {
         if($(".selectActionDown").val() == "SetActive") {
             for(let i = 0; i < arr_id.length; i++) {
@@ -79,13 +78,11 @@ $(document).on("click", ".buttonOkDown", function() {
                 SetActivity(arr_id[i], "not-active");
             } 
         } else if ($(".selectActionDown").val() == "Delete") {
-            if (confirm("Are you sure you want to delete?")) {
                 for(let i = 0; i < arr_id.length; i++) {
-                    DeleteUser(arr_id[i]);
+                    DeleteConfirm(arr_id[i]);
                 } 
-            }
         } else {
-            alert("No action selected! Please select an action!");
+            AlertWindow("Alert!","No action selected! Please select an action!");
         }
     }
 });
@@ -101,7 +98,7 @@ function CheckFunc() {
 function DisplayData() {
     let displayData = "true";
     $.ajax({
-        url:"display.php",
+        url: "display.php",
         type:"post",
         data: {
             displaySend:displayData
@@ -127,10 +124,9 @@ function AddUser(){
             roleSend:roleAdd,
             statusSend:statusAdd
         },
-        success:function(data, status) {
+        success:function() {
             $('#user_form_modal').modal('hide');
             DisplayData();
-            $('#errors').html(data);
         }
     });
 }
@@ -148,6 +144,22 @@ function DeleteUser(deleteId) {
         });
 }
 
+function DeleteConfirm(deleteId) {
+    $("#modal-confirm").modal("show");
+    $("#modal-confirm-ok").on("click", function() {
+        DeleteUser(deleteId);      
+    });
+
+}
+
+function AlertWindow(title, body) {
+    $("#modal-alert").modal("show");
+    $("#modal-alert-title").text(title);
+    $("#modal-alert-body").text(body);
+    $("#modal-alert-close").hide();
+
+}
+
 function SetActivity(activityId,statusUser) {
     $.ajax({
         url:"activity.php",
@@ -156,7 +168,7 @@ function SetActivity(activityId,statusUser) {
             activitySend:activityId,
             statusUserSend:statusUser
         },
-        success:function(data, status) {
+        success:function() {
             DisplayData();
         }
     });
@@ -166,14 +178,14 @@ function GetDetails(updateId) {
     $("#UserModalLabel").text("Update Details");
     $("#formId")[0].reset();
     $('#hiddendata').val(updateId);
-    $.post("update.php",
+    $.post("get.php",
         { updateId:updateId }, 
-        function(data, status) {
+        function(data) {
             let userid=JSON.parse(data);
-            $('#first_name').val(userid.firstname);
-            $('#last_name').val(userid.lastname);
-            $('#role').val(userid.role);
-            userid.status == "active" ? $('#switch').prop("checked", true) : $('#switch').prop("checked", false)
+            $('#first_name').val(userid.user.firstname);
+            $('#last_name').val(userid.user.lastname);
+            $('#role').val(userid.user.role);
+            userid.user.status == "active" ? $('#switch').prop("checked", true) : $('#switch').prop("checked", false)
         });
 }
 
@@ -190,7 +202,7 @@ function UpdateDetails() {
         update_role:update_role,
         update_status:update_status,
         hiddendata:hiddendata
-    }, function(data, status) {
+    }, function() {
         $('#user_form_modal').modal('hide');
         DisplayData();
     });

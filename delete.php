@@ -8,10 +8,12 @@ if(isset($_POST['deleteSend']) && !empty($_POST['deleteSend'])) {
     $responses["status"] = "true";
     $responses["error"] = "null";
     $responses["id"] = $_POST['deleteSend'];
+    echo json_encode($responses);
 }
 else {
     $responses["status"] = "false";
-    $responses["error"]=["code" => "100", "message" => "user id is empty"];
+    $responses["error"]=["code" => "100", "message" => "id for delete not found"];
+    echo json_encode($responses);
 }
 
 ?>

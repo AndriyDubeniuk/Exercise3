@@ -22,8 +22,10 @@ if(isset($_POST['displaySend']) && !empty($_POST['displaySend'])) {
 
     $sql = "SELECT * FROM `crud`";
     $result = mysqli_query($conn,$sql);
+    // $responses = $result->fetch_all(MYSQLI_ASSOC);
     $number = 1;
     while($row = mysqli_fetch_assoc($result)) {
+    // foreach($responses as $row) {
         $table .= '<tr>
         <td class="align-middle">
             <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
@@ -37,7 +39,7 @@ if(isset($_POST['displaySend']) && !empty($_POST['displaySend'])) {
         <td class="text-center align-middle">
             <div class="btn-group align-top">
                 <button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user_form_modal" onclick="GetDetails('.$row['id'].')">Edit</button>
-                <button class="btn btn-sm btn-outline-secondary badge delete-user" value='.$row['id'].' type="button"><i
+                <button class="btn btn-sm btn-outline-secondary badge delete-user" data-toggle="modal" data-target="#modal-confirm" value='.$row['id'].' type="button"><i
                   class="fa fa-trash"></i></button>
             </div>
         </td>
@@ -51,6 +53,7 @@ if(isset($_POST['displaySend']) && !empty($_POST['displaySend'])) {
 else {
     $responses["status"] = "false";
     $responses["error"] = ["code" => "1", "message" => "data display error"];
+    echo json_encode($responses);
 }
 
 ?>
