@@ -13,10 +13,10 @@ $(document).on("click", "#all-items", function() {
 
 $(document).on("click", ".check-action", function() {
     if($(this).prop("checked")==false){
-        $("#all-items").prop("checked", false)
+        $("#all-items").prop("checked", false);
     }
     if($(".check-action:checked").length == $(".check-action").length) {
-        $("#all-items").prop("checked", true)
+        $("#all-items").prop("checked", true);
     }
 });
 
@@ -27,7 +27,9 @@ $(document).on("click", ".buttonAdd", function() {
 });
 
 $(document).on("click", ".delete-user", function() {
-    DeleteConfirm($(this).val());
+    let arr_id = [];
+    arr_id.push($(this).val()); 
+    DeleteConfirm(arr_id);
 });
 
 $(document).on("click", ".buttonOkUp", function() {
@@ -40,24 +42,16 @@ $(document).on("click", ".buttonOkUp", function() {
         AlertWindow("Alert!","No users selected! Please select a user!");
     } else {
         if($(".selectActionUp").val() == "SetActive") {
-            for(let i = 0; i < arr_id.length; i++) {
-                SetActivity(arr_id[i], "active");
-            }
+            SetActivity(arr_id, "active");
         } else if($(".selectActionUp").val() == "SetNotActive") {
-            for(let i = 0; i < arr_id.length; i++) {
-                SetActivity(arr_id[i], "not-active");
-            } 
+            SetActivity(arr_id, "not-active");
         } else if ($(".selectActionUp").val() == "Delete") {
-            for(let i = 0; i < arr_id.length; i++) {
-                DeleteConfirm(arr_id[i]);
-            }
+            DeleteConfirm(arr_id); 
         } else {
             AlertWindow("Alert!","No action selected! Please select an action!");
         }
     }
 });
-
-
 
 
 $(document).on("click", ".buttonOkDown", function() {
@@ -70,22 +64,30 @@ $(document).on("click", ".buttonOkDown", function() {
         AlertWindow("Alert!","No users selected! Please select a user!");
     } else {
         if($(".selectActionDown").val() == "SetActive") {
-            for(let i = 0; i < arr_id.length; i++) {
-                SetActivity(arr_id[i], "active");
-            }
+            SetActivity(arr_id, "active");
         } else if($(".selectActionDown").val() == "SetNotActive") {
-            for(let i = 0; i < arr_id.length; i++) {
-                SetActivity(arr_id[i], "not-active");
-            } 
+            SetActivity(arr_id, "not-active");
         } else if ($(".selectActionDown").val() == "Delete") {
-                for(let i = 0; i < arr_id.length; i++) {
-                    DeleteConfirm(arr_id[i]);
-                } 
+            DeleteConfirm(arr_id);        
         } else {
             AlertWindow("Alert!","No action selected! Please select an action!");
         }
     }
 });
+
+function DeleteConfirm(arr_id) {
+    $("#modal-confirm").modal("show");
+    $("#modal-confirm-ok").on("click", function() {
+        DeleteUser(arr_id);      
+    });
+}
+
+function AlertWindow(title, body) {
+    $("#modal-alert").modal("show");
+    $("#modal-alert-title").text(title);
+    $("#modal-alert-body").text(body);
+    $("#modal-alert-close").hide();
+}
 
 function CheckFunc() {
     if($('#hiddendata').val() == '') {
@@ -103,8 +105,8 @@ function DisplayData() {
         data: {
             displaySend:displayData
         },
-        success:function(data, status){
-            $('#displayDataTable').html(data);
+        success:function(data){
+            $(".table").append(data);
         }
     });
 }
@@ -124,52 +126,63 @@ function AddUser(){
             roleSend:roleAdd,
             statusSend:statusAdd
         },
-        success:function() {
+        success:function(data) {
+            let adddata=JSON.parse(data);
             $('#user_form_modal').modal('hide');
-            DisplayData();
+            if(adddata.status == "true") {
+                let table = "";
+                table += `<tr id="row_${adddata.user.id}">
+                <td class="align-middle">
+                    <div class="custom-control custom-control-inline custom-checkbox custom-control-naeless m-0 align-top">
+                        <input type="checkbox" class="custom-control-input check-action" id="item_${adddata.user.id}" value="${adddata.user.id}">
+                        <label class="custom-control-label" for="item_${adddata.user.id}"></label>
+                    </div>
+                </td>
+                <td class="text-nowrap align-middle">${first_nameAdd} ${last_nameAdd}</td>
+                <td class="text-nowrap align-middle"><span>${roleAdd}</span></td>
+                <td class="text-center align-middle"><i class="fa fa-circle ${statusAdd}-circle" id="status" value=${statusAdd}></i></td>
+                <td class="text-center align-middle">
+                    <div class="btn-group align-top">
+                        <button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user_form_modal" onclick="GetDetails(${adddata.user.id})">Edit</button>
+                        <button class="btn btn-sm btn-outline-secondary badge delete-user" data-toggle="modal" data-target="#modal-confirm" value=${adddata.user.id} type="button"><i
+                        class="fa fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>`;
+                $(".table").append(table);
+            }
         }
     });
 }
 
-function DeleteUser(deleteId) {
-        $.ajax({
-            url:"delete.php",
-            type:"post",
-            data: {
-                deleteSend:deleteId
-            },
-            success:function(data, status) {
-                    DisplayData();
-                }
-        });
-}
-
-function DeleteConfirm(deleteId) {
-    $("#modal-confirm").modal("show");
-    $("#modal-confirm-ok").on("click", function() {
-        DeleteUser(deleteId);      
+function DeleteUser(arr_id) {
+    $.ajax({
+        url:"delete.php",
+        type:"post",
+        data: {
+            arr_idSend:arr_id
+        },
+        success:function() {
+                for(let i=0; i<arr_id.length; i++) {
+                    $("#row_"+arr_id[i]).remove();
+                }    
+        }
     });
-
 }
 
-function AlertWindow(title, body) {
-    $("#modal-alert").modal("show");
-    $("#modal-alert-title").text(title);
-    $("#modal-alert-body").text(body);
-    $("#modal-alert-close").hide();
-
-}
-
-function SetActivity(activityId,statusUser) {
+function SetActivity(activityIdArr,statusUser) {
     $.ajax({
         url:"activity.php",
         type:"post",
         data: {
-            activitySend:activityId,
+            activitySend:activityIdArr,
             statusUserSend:statusUser
         },
         success:function() {
-            DisplayData();
+            let activity = `<i class="fa fa-circle ${statusUser}-circle" id="status" value="${statusUser}"></i>`;
+            for(let i=0; i<activityIdArr.length; i++) {
+                $("#row_"+activityIdArr[i]).find("i.fa-circle").replaceWith(activity);
+            }
         }
     });
 }
@@ -202,8 +215,30 @@ function UpdateDetails() {
         update_role:update_role,
         update_status:update_status,
         hiddendata:hiddendata
-    }, function() {
+    }, function(data) {
+        let updatedata=JSON.parse(data);
+        if(updatedata.status == "true") {
+            let table = "";
+            table += `<tr id="row_${hiddendata}">
+            <td class="align-middle">
+                <div class="custom-control custom-control-inline custom-checkbox custom-control-naeless m-0 align-top">
+                    <input type="checkbox" class="custom-control-input check-action" id="item_${hiddendata}" value="${hiddendata}">
+                    <label class="custom-control-label" for="item_${hiddendata}"></label>
+                </div>
+            </td>
+            <td class="text-nowrap align-middle">${update_first_name} ${update_last_name}</td>
+            <td class="text-nowrap align-middle"><span>${update_role}</span></td>
+            <td class="text-center align-middle"><i class="fa fa-circle ${update_status}-circle" id="status" value=${update_status}></i></td>
+            <td class="text-center align-middle">
+                <div class="btn-group align-top">
+                    <button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user_form_modal" onclick="GetDetails(${hiddendata})">Edit</button>
+                    <button class="btn btn-sm btn-outline-secondary badge delete-user" data-toggle="modal" data-target="#modal-confirm" value=${hiddendata} type="button"><i
+                    class="fa fa-trash"></i></button>
+                </div>
+            </td>
+        </tr>`;
+        $("#row_"+hiddendata).replaceWith(table);
+        }
         $('#user_form_modal').modal('hide');
-        DisplayData();
     });
 }

@@ -2,35 +2,15 @@
 include 'connect.php';
 
 if(isset($_POST['displaySend']) && !empty($_POST['displaySend'])) {
-    $table = '<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th class="align-top">
-                <div
-                    class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0">
-                    <input type="checkbox" class="custom-control-input" id="all-items">
-                    <label class="custom-control-label" for="all-items"></label>
-                </div>
-            </th>
-            <th class="max-width">Name</th>
-            <th class="sortable">Role</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>';
-
+    $table = "";
     $sql = "SELECT * FROM `crud`";
     $result = mysqli_query($conn,$sql);
-    // $responses = $result->fetch_all(MYSQLI_ASSOC);
-    $number = 1;
     while($row = mysqli_fetch_assoc($result)) {
-    // foreach($responses as $row) {
-        $table .= '<tr>
+        $table .= '<tr id="row_'.$row['id'].'">
         <td class="align-middle">
-            <div class="custom-control custom-control-inline custom-checkbox custom-control-nameless m-0 align-top">
-                <input type="checkbox" class="custom-control-input check-action" id="item_'.$number.'" value='.$row['id'].'>
-                <label class="custom-control-label" for="item_'.$number.'"></label>
+            <div class="custom-control custom-control-inline custom-checkbox custom-control-naeless m-0 align-top">
+                <input type="checkbox" class="custom-control-input check-action" id="item_'.$row['id'].'" value='.$row['id'].'>
+                <label class="custom-control-label" for="item_'.$row['id'].'"></label>
             </div>
         </td>
         <td class="text-nowrap align-middle">'.$row['firstname']. ' '.$row['lastname'].'</td>
@@ -44,10 +24,8 @@ if(isset($_POST['displaySend']) && !empty($_POST['displaySend'])) {
             </div>
         </td>
     </tr>';
-    $number++;
+    
     }
-    $table .= '</tbody>
-                </table>';
     echo $table;
 }
 else {

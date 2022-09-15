@@ -10,10 +10,12 @@ if(isset($_POST['first_nameSend']) && !empty($_POST['first_nameSend'])) {
 
                     $sql = "INSERT INTO `crud` (`firstname`, `lastname`, `role`, `status`) values ('$first_nameSend', '$last_nameSend', '$roleSend', '$statusSend')";
                     $result = mysqli_query($conn,$sql);
-
+                    $lastid = mysqli_insert_id($conn);
+                    
                     $responses["status"] = "true";
                     $responses["error"] = "null";
-                    $responses["user"] = ["firstname" => $_POST['first_nameSend'], "lastname" => $_POST['last_nameSend'], "statususer" => $_POST['statusSend'], "role" => $_POST['roleSend']];
+                    $responses["user"] = ["id" => $lastid, "firstname" => $_POST['first_nameSend'], "lastname" => $_POST['last_nameSend'], "statususer" => $_POST['statusSend'], "role" => $_POST['roleSend']];
+                    
                     echo json_encode($responses);
 
                 } else {
