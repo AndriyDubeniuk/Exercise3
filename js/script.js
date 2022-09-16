@@ -5,6 +5,7 @@ $(document).ready(function() {
     $("#clonebuttons").append(buttons);
     buttons.find(".selectActionUp").removeClass("selectActionUp").addClass("selectActionDown");
     buttons.find(".buttonOkUp").removeClass("buttonOkUp").addClass("buttonOkDown");
+
 });
 
 $(document).on("click", "#all-items", function() {
@@ -23,8 +24,10 @@ $(document).on("click", ".check-action", function() {
 $(document).on("click", ".buttonAdd", function() {
     $("#UserModalLabel").text("Add User");
     $("#formId")[0].reset();
-    $('#hiddendata').val('');
+    $("#hiddendata").val('');
+    $("#error").text('');
 });
+
 
 $(document).on("click", ".delete-user", function() {
     let arr_id = [];
@@ -46,9 +49,10 @@ $(document).on("click", ".buttonOkUp", function() {
         } else if($(".selectActionUp").val() == "SetNotActive") {
             SetActivity(arr_id, "not-active");
         } else if ($(".selectActionUp").val() == "Delete") {
-            DeleteConfirm(arr_id); 
+            DeleteConfirm(arr_id);
         } else {
             AlertWindow("Alert!","No action selected! Please select an action!");
+
         }
     }
 });
@@ -68,7 +72,7 @@ $(document).on("click", ".buttonOkDown", function() {
         } else if($(".selectActionDown").val() == "SetNotActive") {
             SetActivity(arr_id, "not-active");
         } else if ($(".selectActionDown").val() == "Delete") {
-            DeleteConfirm(arr_id);        
+            DeleteConfirm(arr_id);       
         } else {
             AlertWindow("Alert!","No action selected! Please select an action!");
         }
@@ -78,7 +82,7 @@ $(document).on("click", ".buttonOkDown", function() {
 function DeleteConfirm(arr_id) {
     $("#modal-confirm").modal("show");
     $("#modal-confirm-ok").on("click", function() {
-        DeleteUser(arr_id);      
+        DeleteUser(arr_id);    
     });
 }
 
@@ -128,8 +132,8 @@ function AddUser(){
         },
         success:function(data) {
             let adddata=JSON.parse(data);
-            $('#user_form_modal').modal('hide');
             if(adddata.status == "true") {
+                $('#user_form_modal').modal('hide');
                 let table = "";
                 table += `<tr id="row_${adddata.user.id}">
                 <td class="align-middle">
@@ -147,9 +151,12 @@ function AddUser(){
                         <button class="btn btn-sm btn-outline-secondary badge delete-user" data-toggle="modal" data-target="#modal-confirm" value=${adddata.user.id} type="button"><i
                         class="fa fa-trash"></i></button>
                     </div>
-                </td>
+                </td> 
             </tr>`;
                 $(".table").append(table);
+            } else {
+                $('#user_form_modal').modal('show');
+                $("#error").text("Error: " + adddata.error.message);
             }
         }
     });
@@ -163,9 +170,13 @@ function DeleteUser(arr_id) {
             arr_idSend:arr_id
         },
         success:function() {
-                for(let i=0; i<arr_id.length; i++) {
-                    $("#row_"+arr_id[i]).remove();
-                }    
+            if (arr_id.length == $(".check-action").length) {
+                $("#all-items").removeAttr("checked"); 
+                console.log("daddadadadadad");
+            }    
+            for(let i=0; i<arr_id.length; i++) {
+                $("#row_"+arr_id[i]).remove();
+            }
         }
     });
 }
@@ -198,7 +209,8 @@ function GetDetails(updateId) {
             $('#first_name').val(userid.user.firstname);
             $('#last_name').val(userid.user.lastname);
             $('#role').val(userid.user.role);
-            userid.user.status == "active" ? $('#switch').prop("checked", true) : $('#switch').prop("checked", false)
+            userid.user.status == "active" ? $('#switch').prop("checked", true) : $('#switch').prop("checked", false);
+            $("#error").text('');
         });
 }
 
