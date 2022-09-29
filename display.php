@@ -1,11 +1,15 @@
 <?php
 include 'connect.php';
+include 'arrayrole.php';
 
 if(isset($_POST['displaySend']) && !empty($_POST['displaySend'])) {
     $table = "";
+    $status = "";
     $sql = "SELECT * FROM `crud`";
     $result = mysqli_query($conn,$sql);
     while($row = mysqli_fetch_assoc($result)) {
+        if ($row['status'] == 1) { $status = "active"; } 
+        else { $status = "not-active"; }
         $table .= '<tr id="row_'.$row['id'].'">
         <td class="align-middle">
             <div class="custom-control custom-control-inline custom-checkbox custom-control-naeless m-0 align-top">
@@ -13,12 +17,12 @@ if(isset($_POST['displaySend']) && !empty($_POST['displaySend'])) {
                 <label class="custom-control-label" for="item_'.$row['id'].'"></label>
             </div>
         </td>
-        <td class="text-nowrap align-middle">'.$row['firstname']. ' '.$row['lastname'].'</td>
-        <td class="text-nowrap align-middle"><span>'.$row['role'].'</span></td>
-        <td class="text-center align-middle"><i class="fa fa-circle '.$row['status'].'-circle" id="status" value='.$row['status'].'></i></td>
+        <td class="text-nowrap align-middle first-last-name">'.$row['firstname']. ' '.$row['lastname'].'</td>
+        <td class="text-nowrap align-middle role-name"><span>'.$arrRole[$row['role']].'</span></td>
+        <td class="text-center align-middle status-name"><i class="fa fa-circle '.$status.'-circle" id="status" value='.$row['status'].'></i></td>
         <td class="text-center align-middle">
             <div class="btn-group align-top">
-                <button class="btn btn-sm btn-outline-secondary badge" type="button" data-toggle="modal" data-target="#user_form_modal" onclick="GetDetails('.$row['id'].')">Edit</button>
+                <button class="btn btn-sm btn-outline-secondary badge" type="button" onclick="GetDetails('.$row['id'].')">Edit</button>
                 <button class="btn btn-sm btn-outline-secondary badge delete-user" data-toggle="modal" data-target="#modal-confirm" value='.$row['id'].' type="button"><i
                   class="fa fa-trash"></i></button>
             </div>
@@ -29,8 +33,8 @@ if(isset($_POST['displaySend']) && !empty($_POST['displaySend'])) {
     echo $table;
 }
 else {
-    $responses["status"] = "false";
-    $responses["error"] = ["code" => "1", "message" => "data display error"];
+    $responses["status"] = false;
+    $responses["error"] = ["code" => 1, "message" => "data display error"];
     echo json_encode($responses);
 }
 
