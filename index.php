@@ -17,11 +17,11 @@
 <div class="container">
     <div class="row flex-lg-nowrap"> 
         <div class="col">
-            <div style="display: flex; justify-content: center; margin-bottom: 10px;" id="allbuttuons">
+            <div class="d-flex justify-content-center mb-3" id="allbuttuons">
                 <button type="button" class="btn btn-outline-secondary mr-3 buttonAdd" data-toggle="modal" data-target="#user_form_modal">
                     Add User
                 </button>
-                <select class="form-control border-secondary selectActionUp" style="width: 50%;">
+                <select class="form-control border-secondary w-50 selectActionUp">
                 <option selected value>--- Please select an action ---</option>
                 <option value="SetActive">Set active</option>
                 <option value="SetNotActive">Set not active</option>
@@ -103,14 +103,15 @@
                                     <div class="form-group">
                                             <input type="checkbox" class="switch"  id="switch">
                                             <label for="switch" class="statuslabel">Status: </label>
-                                            <label class="statusactive" style="margin-left: 55px;">(Not Active / Active) </label>  
+                                            <label class="statusactive ml-5">(Not Active / Active) </label>  
                                     </div>
                                 </form>
-                                <p style="color: red;" id="error"></p>
+                                <p class="text-danger" id="error"></p>
                             </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary save-button" onclick="CheckFunc()">Save</button>
+                                    <button type="button" class="btn btn-primary save-button" id="buttonSave">Save</button>
+                                    <!-- onclick="CheckFunc()" -->
                                     <input type="hidden" id="hiddendata">
                                 </div>
                             </div>
@@ -127,7 +128,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             </div>
-                            <div class="modal-body" id="modal-confirm-body" style="padding: 1rem;">
+                            <div class="modal-body p-3" id="modal-confirm-body">
                             Are you sure you want to delete?
                             </div>
                             <div class="modal-footer">
@@ -148,7 +149,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             </div>
-                            <div class="modal-body" id="modal-alert-body" style="padding: 1rem;">Modal body
+                            <div class="modal-body p-3" id="modal-alert-body">Modal body
                             </div>
                             <div class="modal-footer">
                             <button type="button" class="btn btn-primary" id="modal-alert-ok"  data-dismiss="modal">Ok</button>

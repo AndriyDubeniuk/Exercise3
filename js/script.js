@@ -5,23 +5,17 @@ $(document).ready(function() {
     buttons.find(".selectActionUp").removeClass("selectActionUp").addClass("selectActionDown");
     buttons.find(".buttonOkUp").removeClass("buttonOkUp").addClass("buttonOkDown");
 
-    // $("#user_form_modal").on("keyup", function() {
-    //     if ($("#first_name").val() != "") {
-    //         $("#error").text('');
-    //         if ($("#last_name").val() != "") {
-    //             $("#error").text('');
-    //             $("#role").on("change", function() {
-    //                 if ($("#role").val() != "") {
-    //                     $("#error").text('');
-    //                 }
-    //             });
-    //         }
-    //     }
-    // });
-
     $("#displayDataTable").bind("DOMSubtreeModified", function() {
         if ($("#all-items").prop("checked")==true) {
             $(".check-action").prop("checked", true);
+        }
+    });
+
+    $("#buttonSave").on("click", function() {
+        if($('#hiddendata').val() == '') {
+            AddUser();
+        } else {
+            UpdateDetails();
         }
     });
 
@@ -34,10 +28,6 @@ $(document).ready(function() {
     
     $(".buttonOkUp").on("click", function() {
         let arr_id = [];
-
-        // $(".check-action:checked").each(function(i) {
-        //     arr_id[i] = $(this).val();
-        // })
 
         $(".check-action:checked").each(function() {
             arr_id.push(this.value);
@@ -106,14 +96,6 @@ function AlertWindow(title, body) {
     $("#modal-alert").modal("show");
     $("#modal-alert-title").text(title);
     $("#modal-alert-body").text(body);
-}
-
-function CheckFunc() {
-    if($('#hiddendata').val() == '') {
-        AddUser();
-    } else {
-        UpdateDetails();
-    }
 }
 
 function DisplayData() {
