@@ -12,8 +12,6 @@ if(isset($_POST['hiddendata']) && !empty($_POST['hiddendata'])) {
                     $lastname = $_POST['update_last_name'];
                     $status = $_POST['update_status'];
                     $role = $_POST['update_role'];
-                     
-                    // for multiple select // $roles = implode(',',$role);
 
                     $sql = "UPDATE `crud` SET `firstname` = '$firstname', `lastname` = '$lastname', `role` = '$role', `status` = '$status' WHERE `id`=$uniqueid";
                     $result = mysqli_query($conn,$sql);

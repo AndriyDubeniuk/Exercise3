@@ -8,8 +8,6 @@ if(isset($_POST['first_nameSend']) && !empty($_POST['first_nameSend'])) {
     if(isset($_POST['last_nameSend']) && !empty($_POST['last_nameSend'])) {
         if(isset($_POST['roleSend']) && !empty($_POST['roleSend'])) {
             if(isset($_POST['statusSend'])) {
-
-                    // for multiple $roles = implode(',',$roleSend);
                     $sql = "INSERT INTO `crud` (`firstname`, `lastname`, `role`, `status`) VALUES ('$first_nameSend', '$last_nameSend', '$roleSend', '$statusSend')";
                     $result = mysqli_query($conn,$sql);
                     $lastid = mysqli_insert_id($conn);

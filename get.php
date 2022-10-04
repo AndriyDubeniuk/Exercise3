@@ -11,7 +11,6 @@ if (isset($_POST['updateId'])) {
         $responses["status"] = true;
         $responses["error"] = null;
         while($row = mysqli_fetch_assoc($result)) {  
-            // for multiple $row["role"] = explode(",", $row["role"]);
             $rowResp = $row;
         }
         $rowResp["id"] = intval($rowResp["id"]);
