@@ -1,30 +1,5 @@
 $(document).ready(function() {
     DisplayData();
-    let buttons = $("#allbuttuons").clone();
-    $("#clonebuttons").append(buttons);
-    buttons.find(".selectActionUp").removeClass("selectActionUp").addClass("selectActionDown");
-    buttons.find(".buttonOkUp").removeClass("buttonOkUp").addClass("buttonOkDown");
-
-    $("#displayDataTable").bind("DOMSubtreeModified", function() {
-        if ($("#all-items").prop("checked")==true) {
-            $(".check-action").prop("checked", true);
-        }
-    });
-
-    $("#buttonSave").on("click", function() {
-        if($('#hiddendata').val() == '') {
-            AddUser();
-        } else {
-            UpdateDetails();
-        }
-    });
-
-    $(".buttonAdd").on("click", function() {
-        $("#UserModalLabel").text("Add User");
-        $("#formId")[0].reset();
-        $("#hiddendata").val('');
-        $("#error").text('');
-    });
     
     $(".buttonOkUp").on("click", function() {
         let arr_id = [];
@@ -69,6 +44,24 @@ $(document).ready(function() {
         }
     });
 
+});
+
+$(document).on("click", ".buttonAddEdit", function() {
+    let dataid = $(this).data("id");
+    if (dataid == "") {
+        $("#UserModalLabel").text("Add User");
+        $("#formId")[0].reset();
+        $("#error").text('');
+    } else {
+        GetDetails(dataid);
+    }
+    $("#buttonSave").off("click").on("click", function() {
+        if (dataid == "") {
+            AddUser();
+        } else {
+            UpdateDetails(dataid);
+        }
+    });
 });
 
 $(document).on("click", "#all-items", function() {
@@ -121,6 +114,7 @@ function AddUser(){
     $.ajax({
         url:"insert.php",
         type:"post",
+        dataType: "json",
         data:{
             first_nameSend:first_nameAdd,
             last_nameSend:last_nameAdd,
@@ -128,32 +122,34 @@ function AddUser(){
             statusSend:statusAdd
         },
         success:function(data, status) {
-            let adddata=JSON.parse(data);
-            if(adddata.status == true) {
+            if(data.status == true) {
                 $('#user_form_modal').modal('hide');
                 let table = "";
-                table += `<tr id="row_${adddata.user.id}">
+                table += `<tr id="row_${data.user.id}">
                 <td class="align-middle">
                     <div class="custom-control custom-control-inline custom-checkbox custom-control-naeless m-0 align-top">
-                        <input type="checkbox" class="custom-control-input check-action" id="item_${adddata.user.id}" value="${adddata.user.id}">
-                        <label class="custom-control-label" for="item_${adddata.user.id}"></label>
+                        <input type="checkbox" class="custom-control-input check-action" id="item_${data.user.id}" value="${data.user.id}">
+                        <label class="custom-control-label" for="item_${data.user.id}"></label>
                     </div>
                 </td>
-                <td class="text-nowrap align-middle first-last-name">${first_nameAdd} ${last_nameAdd}</td>
-                <td class="text-nowrap align-middle role-name"><span>${adddata.user.role}</span></td>
-                <td class="text-center align-middle status-name"><i class="fa fa-circle ${arrStatus[statusAdd]}-circle" id="status" value=${statusAdd}></i></td>
+                <td class="text-nowrap align-middle first-last-name">${data.user.firstname} ${data.user.lastname}</td>
+                <td class="text-nowrap align-middle role-name"><span>${data.user.role}</span></td>
+                <td class="text-center align-middle status-name"><i class="fa fa-circle ${arrStatus[data.user.statususer]}-circle" value=${data.user.statususer}></i></td>
                 <td class="text-center align-middle">
                     <div class="btn-group align-top">
-                        <button class="btn btn-sm btn-outline-secondary badge" type="button" onclick="GetDetails(${adddata.user.id})">Edit</button>
-                        <button class="btn btn-sm btn-outline-secondary badge delete-user" data-toggle="modal" data-target="#modal-confirm" value=${adddata.user.id} type="button"><i
+                        <button class="btn btn-sm btn-outline-secondary badge buttonAddEdit" data-id="${data.user.id}" type="button">Edit</button>
+                        <button class="btn btn-sm btn-outline-secondary badge delete-user" data-toggle="modal" data-target="#modal-confirm" value=${data.user.id} type="button"><i
                         class="fa fa-trash"></i></button>
                     </div>
                 </td> 
             </tr>`;
                 $(".table").append(table);
+                if ($("#all-items").prop("checked")==true) {
+                    $("#item_"+data.user.id).prop("checked", true);
+                }
             } else {
                 $('#user_form_modal').modal('show');
-                $("#error").text("Error: " + adddata.error.message);
+                $("#error").text("Error: " + data.error.message);
             }
         }
     });
@@ -171,17 +167,21 @@ function DeleteUser(arr_id) {
         $.ajax({
             url:"delete.php",
             type:"post",
+            dataType: "json",
             data: {
                 arr_idSend:arr_id
             },
             success:function(data, status) {
-                if (arr_id.length == $(".check-action").length) {
-                    $("#all-items").removeAttr("checked"); 
-                }    
-                for(let i=0; i<arr_id.length; i++) {
-                    $("#row_"+arr_id[i]).remove();
+                if(data.status == true) {
+                    if (data.users.length == $(".check-action").length) {
+                        $("#all-items").removeAttr("checked"); 
+                    }    
+                    for(let i=0; i<data.users.length; i++) {
+                        $("#row_"+data.users[i]).remove();
+                    }
+                } else {
+                    AlertWindow("Error!", data.error.message);
                 }
-                arr_id = [];
             }
         });
     });
@@ -191,76 +191,84 @@ function SetActivity(activityIdArr,statusUser) {
     $.ajax({
         url:"activity.php",
         type:"post",
+        dataType: "json",
         data: {
             activitySend:activityIdArr,
             statusUserSend:statusUser
         },
         success:function(data, status) {
-            let setdata=JSON.parse(data);
-            if(setdata.status == true) {
-                let activity = `<i class="fa fa-circle ${arrStatus[statusUser]}-circle" id="status" value="${statusUser}"></i>`;
-                for(let i=0; i<setdata.users.length; i++) {
-                    $("#row_"+setdata.users[i].id).find("i.fa-circle").replaceWith(activity);
+            if(data.status == true) {
+                let activity = `<i class="fa fa-circle ${arrStatus[data.users[0].status]}-circle" value="${data.users[0].status}"></i>`;
+                for(let i=0; i<data.users.length; i++) {
+                    $("#row_"+data.users[i].id).find("i.fa-circle").replaceWith(activity);
                 }
             } else {
                 let strUsers = "";
-                for(let i=0; i<setdata.error.users.length; i++) {
-                    strUsers += $("#row_"+setdata.error.users[i].id).find("td.first-last-name").text() + ", ";
+                for(let i=0; i<data.error.users.length; i++) {
+                    strUsers += $("#row_"+data.error.users[i].id).find("td.first-last-name").text() + ", ";
                 }
                 strUsers = strUsers.slice(0,-2);
-                AlertWindow("Error!", strUsers + " - " + setdata.error.message);
+                AlertWindow("Error!", strUsers + " - " + data.error.message);
             }
         }
     });
 }
 
 function GetDetails(updateId) {
-    $.post("get.php",
-        { updateId:updateId }, 
-        function(data, status) {
-            let userid=JSON.parse(data);
-            if(userid.status == true) {
+    $.ajax({
+        url:"get.php",
+        type:"post",
+        dataType: "json",
+        data: { 
+            updateId:updateId 
+        }, 
+        success:function(data, status) {
+            if(data.status == true) {
                 $("#UserModalLabel").text("Update Details");
                 $("#formId")[0].reset();
-                $('#hiddendata').val(Number(updateId));
                 $('#user_form_modal').modal('show'); 
-                $('#first_name').val(userid.user.firstname);
-                $('#last_name').val(userid.user.lastname);
-                $('#role').val(userid.user.role);
-                userid.user.status == 1 ? $('#switch').prop("checked", true) : $('#switch').prop("checked", false);
+                $('#first_name').val(data.user.firstname);
+                $('#last_name').val(data.user.lastname);
+                $('#role').val(data.user.role);
+                data.user.status == 1 ? $('#switch').prop("checked", true) : $('#switch').prop("checked", false);
                 $("#error").text('');
             } else {
-                AlertWindow("Error!", userid.error.message);
+                AlertWindow("Error!", data.error.message);
             }
-        });
+        }
+    });
 }
 
-function UpdateDetails() {
+function UpdateDetails(updateId) {
     let update_first_name = $('#first_name').val();
     let update_last_name = $('#last_name').val();
     let update_role = $('#role').val();
     let update_status = $('#switch').prop("checked") ? 1 : 0;
-    let hiddendata=$('#hiddendata').val();
 
-    $.post("update.php", {
-        update_first_name:update_first_name,
-        update_last_name:update_last_name,
-        update_role:update_role,
-        update_status:update_status,
-        hiddendata:hiddendata
-    }, function(data, status) {
-        let updatedata=JSON.parse(data);
-        if(updatedata.status == true) {
-            let tdname = `<td class="text-nowrap align-middle first-last-name">${update_first_name} ${update_last_name}</td>`;
-            let tdrole = `<td class="text-nowrap align-middle role-name"><span>${updatedata.user.role}</span></td>`;
-            let tdstatus = `<td class="text-center align-middle status-name"><i class="fa fa-circle ${arrStatus[update_status]}-circle" id="status" value=${update_status}></i></td>`;
-            $("#row_"+hiddendata).find("td.first-last-name").replaceWith(tdname);
-            $("#row_"+hiddendata).find("td.role-name").replaceWith(tdrole);
-            $("#row_"+hiddendata).find("td.status-name").replaceWith(tdstatus);
-            $('#user_form_modal').modal('hide');
-        } else {
-            $('#user_form_modal').modal('show');
-            $("#error").text("Error: " + updatedata.error.message );
+    $.ajax({
+        url:"update.php",
+        type:"post",
+        dataType: "json",
+        data: { 
+            update_first_name:update_first_name,
+            update_last_name:update_last_name,
+            update_role:update_role,
+            update_status:update_status,
+            updateId:updateId
+        },
+        success:function(data, status) {
+            if(data.status == true) {
+                let tdname = `<td class="text-nowrap align-middle first-last-name">${data.user.firstname} ${data.user.lastname}</td>`;
+                let tdrole = `<td class="text-nowrap align-middle role-name"><span>${data.user.role}</span></td>`;
+                let tdstatus = `<td class="text-center align-middle status-name"><i class="fa fa-circle ${arrStatus[data.user.statususer]}-circle" value=${data.user.statususer}></i></td>`;
+                $("#row_"+data.user.id).find("td.first-last-name").replaceWith(tdname);
+                $("#row_"+data.user.id).find("td.role-name").replaceWith(tdrole);
+                $("#row_"+data.user.id).find("td.status-name").replaceWith(tdstatus);
+                $('#user_form_modal').modal('hide');
+            } else {
+                $('#user_form_modal').modal('show');
+                $("#error").text("Error: " + data.error.message );
+            }
         }
     });
 }

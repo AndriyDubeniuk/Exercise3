@@ -22,7 +22,7 @@ if(isset($_POST['displaySend']) && !empty($_POST['displaySend'])) {
         <td class="text-center align-middle status-name"><i class="fa fa-circle '.$status.'-circle" id="status" value='.$row['status'].'></i></td>
         <td class="text-center align-middle">
             <div class="btn-group align-top">
-                <button class="btn btn-sm btn-outline-secondary badge" type="button" onclick="GetDetails('.$row['id'].')">Edit</button>
+                <button class="btn btn-sm btn-outline-secondary badge buttonEdit buttonAddEdit" data-id="'.$row['id'].'" type="button">Edit</button>
                 <button class="btn btn-sm btn-outline-secondary badge delete-user" data-toggle="modal" data-target="#modal-confirm" value='.$row['id'].' type="button"><i
                   class="fa fa-trash"></i></button>
             </div>

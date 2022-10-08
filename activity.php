@@ -1,12 +1,24 @@
 <?php
 include 'connect.php';
 
-if( isset($_POST['activitySend']) && !empty($_POST['activitySend'])) {
-    if(isset($_POST['statusUserSend'])) {
-        $status = $_POST['statusUserSend'];
+$activitySend = $_POST['activitySend'];
+$statusUserSend = $_POST['statusUserSend'];
+
+if(!isset($activitySend) || empty($activitySend)) {
+    $responses["status"] = false;
+    $responses["error"]=["code" => 50, "message" => "activity for update activity not found"]; 
+    echo json_encode($response);
+} else {
+    if(!isset($statusUserSend)) {
+        $responses["status"] = false;
+        $responses["error"]=["code" => 51, "message" => "id for update activity not found"];
+        echo json_encode($response);
+    } else {
+
+        $status = $statusUserSend;
         $usersExist = [];
         $usersDontExist = [];
-        foreach($_POST["activitySend"] as $id) {
+        foreach($activitySend as $id) {
             $sql = "SELECT * FROM `crud` WHERE `id` = '$id'";
             $result = mysqli_query($conn,$sql);
             $count = mysqli_num_rows($result);
@@ -33,14 +45,6 @@ if( isset($_POST['activitySend']) && !empty($_POST['activitySend'])) {
             echo json_encode($responses);
         }
 
-    } else {
-        $responses["status"] = false;
-        $responses["error"]=["code" => 51, "message" => "id for update activity not found"];
-        echo json_encode($response);
     }
-} else {
-    $responses["status"] = false;
-    $responses["error"]=["code" => 50, "message" => "activity for update activity not found"]; 
-    echo json_encode($response);
 }
 ?>

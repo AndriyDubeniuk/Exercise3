@@ -1,14 +1,16 @@
 <?php
 include 'connect.php';
 
-if(isset($_POST["arr_idSend"])) {
+$arr_idSend = $_POST["arr_idSend"];
+
+if(isset($arr_idSend)) {
     $responses["status"] = true;
     $responses["error"] = null;
     $users = [];
-        foreach($_POST["arr_idSend"] as $id) {
+        foreach($arr_idSend as $id) {
             $sql = "DELETE FROM `crud` WHERE `id` = $id";
             $result = mysqli_query($conn,$sql);
-            array_push($users, ["id" => (int)$id]);
+            array_push($users, (int)$id);
             
         }
         $responses["users"] = $users;

@@ -17,8 +17,8 @@
 <div class="container">
     <div class="row flex-lg-nowrap"> 
         <div class="col">
-            <div class="d-flex justify-content-center mb-3" id="allbuttuons">
-                <button type="button" class="btn btn-outline-secondary mr-3 buttonAdd" data-toggle="modal" data-target="#user_form_modal">
+            <div class="d-flex justify-content-center mb-3">
+                <button type="button" class="btn btn-outline-secondary mr-3 buttonAddEdit" data-id="" data-toggle="modal" data-target="#user_form_modal">
                     Add User
                 </button>
                 <select class="form-control border-secondary w-50 selectActionUp">
@@ -69,7 +69,20 @@
                             </div>
                         </div>
                     </div>
-                    <div id="clonebuttons"></div>
+            <div class="d-flex justify-content-center mb-3">
+                <button type="button" class="btn btn-outline-secondary mr-3 buttonAddEdit" data-id="" data-toggle="modal" data-target="#user_form_modal">
+                    Add User
+                </button>
+                <select class="form-control border-secondary w-50 selectActionDown">
+                <option selected value>--- Please select an action ---</option>
+                <option value="SetActive">Set active</option>
+                <option value="SetNotActive">Set not active</option>
+                <option value="Delete">Delete</option>
+                </select>
+                <button type="button" class="btn btn-outline-secondary ml-3 buttonOkDown">
+                    OK
+                </button>
+            </div>
 
 
                     <!-- Modal Edit/Update -->
@@ -111,8 +124,6 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     <button type="button" class="btn btn-primary save-button" id="buttonSave">Save</button>
-                                    <!-- onclick="CheckFunc()" -->
-                                    <input type="hidden" id="hiddendata">
                                 </div>
                             </div>
                         </div>

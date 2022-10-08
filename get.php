@@ -1,10 +1,11 @@
 <?php
 include 'connect.php';
 
-if (isset($_POST['updateId'])) {
-    $user_id = $_POST['updateId'];
+$updateId = $_POST['updateId'];
 
-    $sql = "SELECT * FROM `crud` WHERE id = $user_id";
+if (isset($updateId)) {
+
+    $sql = "SELECT * FROM `crud` WHERE id = $updateId";
     $result = mysqli_query($conn,$sql);
     $count = mysqli_num_rows($result);
     if ( $count > 0 ) {
