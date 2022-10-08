@@ -3,7 +3,7 @@ include 'connect.php';
 
 $updateId = $_POST['updateId'];
 
-if (isset($updateId)) {
+if (!empty($updateId)) {
 
     $sql = "SELECT * FROM `crud` WHERE id = $updateId";
     $result = mysqli_query($conn,$sql);

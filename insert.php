@@ -7,17 +7,17 @@ $last_nameSend = $_POST['last_nameSend'];
 $roleSend = $_POST['roleSend'];
 $statusSend = $_POST['statusSend'];
 
-if(!isset($first_nameSend) || empty($first_nameSend)) {
+if(empty($first_nameSend)) {
     $responses["status"] = false;
     $responses["error"]=["code" => 101, "message" => "first name for add not found"];
     echo json_encode($responses);
 } else {
-    if(!isset($last_nameSend) || empty($last_nameSend)) {
+    if(empty($last_nameSend)) {
         $responses["status"] = false;
         $responses["error"]=["code" => 102, "message" => "last name for add not found"];
         echo json_encode($responses);
     } else {
-        if(!isset($roleSend) || empty($roleSend)) {
+        if(empty($roleSend)) {
             $responses["status"] = false;
             $responses["error"]=["code" => 103, "message" => "role for add not found"];
             echo json_encode($responses);

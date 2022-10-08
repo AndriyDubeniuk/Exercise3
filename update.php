@@ -8,22 +8,22 @@ $update_last_name = $_POST['update_last_name'];
 $update_role = $_POST['update_role'];
 $update_status = $_POST['update_status'];
 
-if(!isset($updateId) || empty($updateId)) {
+if(empty($updateId)) {
     $responses["status"] = false;
     $responses["error"]=["code" => 200, "message" => "id for update not found"];
     echo json_encode($responses);
 } else {
-    if(!isset($update_first_name) || empty($update_first_name)) {
+    if(empty($update_first_name)) {
         $responses["status"] = false;
         $responses["error"]=["code" => 201, "message" => "first name for update not found"];
         echo json_encode($responses);
     } else {
-        if(!isset($update_last_name) || empty($update_last_name)) {
+        if(empty($update_last_name)) {
             $responses["status"] = false;
             $responses["error"]=["code" => 202, "message" => "last name for update not found"];
             echo json_encode($responses);
         } else {
-            if(!isset($update_role) || empty($update_role)) {
+            if(empty($update_role)) {
                 $responses["status"] = false;
                 $responses["error"]=["code" => 203, "message" => "role for update not found"]; 
                 echo json_encode($responses); 

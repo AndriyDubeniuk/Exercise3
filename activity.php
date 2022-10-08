@@ -4,7 +4,7 @@ include 'connect.php';
 $activitySend = $_POST['activitySend'];
 $statusUserSend = $_POST['statusUserSend'];
 
-if(!isset($activitySend) || empty($activitySend)) {
+if(empty($activitySend)) {
     $responses["status"] = false;
     $responses["error"]=["code" => 50, "message" => "activity for update activity not found"]; 
     echo json_encode($response);

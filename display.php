@@ -2,7 +2,7 @@
 include 'connect.php';
 include 'arrayrole.php';
 
-if(isset($_POST['displaySend']) && !empty($_POST['displaySend'])) {
+if(!empty($_POST['displaySend'])) {
     $table = "";
     $status = "";
     $sql = "SELECT * FROM `crud`";

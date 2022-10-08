@@ -3,7 +3,7 @@ include 'connect.php';
 
 $arr_idSend = $_POST["arr_idSend"];
 
-if(isset($arr_idSend)) {
+if(!empty($arr_idSend)) {
     $responses["status"] = true;
     $responses["error"] = null;
     $users = [];
