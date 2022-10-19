@@ -79,7 +79,8 @@ $(document).on("click", ".check-action", function() {
 
 $(document).on("click", ".delete-user", function() {
     let arr_id = [];
-    arr_id.push($(this).val()); 
+    arr_id.push($(this).val());
+    console.log(arr_id); 
     DeleteUser(arr_id);
 });
 
@@ -96,11 +97,37 @@ function DisplayData() {
     $.ajax({
         url: "display.php",
         type:"post",
+        dataType: "json",
         data: {
             displaySend:displayData
         },
         success:function(data, status){
-            $(".table").append(data);
+            if(data.status == true) {
+                let table = "";
+                for(let i=0; i<data.users.length; i++) {
+                    table += `<tr id="row_${data.users[i].id}">
+                    <td class="align-middle">
+                        <div class="custom-control custom-control-inline custom-checkbox custom-control-naeless m-0 align-top">
+                            <input type="checkbox" class="custom-control-input check-action" id="item_${data.users[i].id}" value=${data.users[i].id}>
+                            <label class="custom-control-label" for="item_${data.users[i].id}"></label>
+                        </div>
+                    </td>
+                    <td class="text-nowrap align-middle first-last-name">${data.users[i].firstname} ${data.users[i].lastname}</td>
+                    <td class="text-nowrap align-middle role-name"><span>${data.users[i].role}</span></td>
+                    <td class="text-center align-middle status-name"><i class="fa fa-circle ${arrStatus[data.users[i].status_user]}-circle" id="status" value=${data.users[i].status_user}></i></td>
+                    <td class="text-center align-middle">
+                        <div class="btn-group align-top">
+                            <button class="btn btn-sm btn-outline-secondary badge buttonAddEdit" data-id="${data.users[i].id}" type="button">Edit</button>
+                            <button class="btn btn-sm btn-outline-secondary badge delete-user" data-toggle="modal" data-target="#modal-confirm" value=${data.users[i].id} type="button"><i
+                            class="fa fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>`;
+                }
+                $(".table").append(table);
+            } else {
+                $(".card-body").text(data.error.message);
+            }
         }
     });
 }
@@ -198,17 +225,12 @@ function SetActivity(activityIdArr,statusUser) {
         },
         success:function(data, status) {
             if(data.status == true) {
-                let activity = `<i class="fa fa-circle ${arrStatus[data.users[0].status]}-circle" value="${data.users[0].status}"></i>`;
+                let activity = `<i class="fa fa-circle ${arrStatus[data.status_user]}-circle" value="${data.status_user}"></i>`;
                 for(let i=0; i<data.users.length; i++) {
-                    $("#row_"+data.users[i].id).find("i.fa-circle").replaceWith(activity);
+                    $("#row_"+data.users[i]).find("i.fa-circle").replaceWith(activity);
                 }
             } else {
-                let strUsers = "";
-                for(let i=0; i<data.error.users.length; i++) {
-                    strUsers += $("#row_"+data.error.users[i].id).find("td.first-last-name").text() + ", ";
-                }
-                strUsers = strUsers.slice(0,-2);
-                AlertWindow("Error!", strUsers + " - " + data.error.message);
+                AlertWindow("Error!", data.error.message);
             }
         }
     });

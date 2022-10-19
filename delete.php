@@ -3,22 +3,13 @@ include 'connect.php';
 
 $arr_idSend = $_POST["arr_idSend"];
 
-if(!empty($arr_idSend)) {
-    $responses["status"] = true;
-    $responses["error"] = null;
-    $users = [];
-        foreach($arr_idSend as $id) {
-            $sql = "DELETE FROM `crud` WHERE `id` = $id";
-            $result = mysqli_query($conn,$sql);
-            array_push($users, (int)$id);
-            
-        }
-        $responses["users"] = $users;
-        echo json_encode($responses);
-} else {
-    $responses["status"] = false;
-    $responses["error"]=["code" => 100, "message" => "id for delete not found"];
-    echo json_encode($responses);
-}
+$id = implode(",", $arr_idSend);
+$sql = "DELETE FROM `crud` WHERE `id` IN ($id)";
+$result = mysqli_query($conn,$sql);
+
+$responses["status"] = true;
+$responses["error"] = null;
+$responses["users"] = $arr_idSend;
+echo json_encode($responses);
 
 ?>

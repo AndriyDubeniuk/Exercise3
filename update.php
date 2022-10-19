@@ -12,39 +12,43 @@ if(empty($updateId)) {
     $responses["status"] = false;
     $responses["error"]=["code" => 200, "message" => "id for update not found"];
     echo json_encode($responses);
-} else {
-    if(empty($update_first_name)) {
-        $responses["status"] = false;
-        $responses["error"]=["code" => 201, "message" => "first name for update not found"];
-        echo json_encode($responses);
-    } else {
-        if(empty($update_last_name)) {
-            $responses["status"] = false;
-            $responses["error"]=["code" => 202, "message" => "last name for update not found"];
-            echo json_encode($responses);
-        } else {
-            if(empty($update_role)) {
-                $responses["status"] = false;
-                $responses["error"]=["code" => 203, "message" => "role for update not found"]; 
-                echo json_encode($responses); 
-            } else {
-                if(!isset($update_status)) {
-                    $responses["status"] = false;
-                    $responses["error"]=["code" => 204, "message" => "status for update not found"];
-                    echo json_encode($responses);
-                } else {
-
-                    $sql = "UPDATE `crud` SET `firstname` = '$update_first_name', `lastname` = '$update_last_name', `role` = '$update_role', `status` = '$update_status' WHERE `id`=$updateId";
-                    $result = mysqli_query($conn,$sql);
-
-                    $responses["status"] = true;
-                    $responses["error"] = null;
-                    $responses["user"] = ["id" => (int)$updateId, "firstname" => $update_first_name, "lastname" => $update_last_name, "statususer" => (int)$update_status, "role" => $arrRole[$update_role]];
-                    echo json_encode($responses);
-                    
-                }
-            }
-        }
-    }
+    exit();
 }
+
+if(empty($update_first_name)) {
+    $responses["status"] = false;
+    $responses["error"]=["code" => 201, "message" => "first name for update not found"];
+    echo json_encode($responses);
+    exit();
+}   
+
+if(empty($update_last_name)) {
+    $responses["status"] = false;
+    $responses["error"]=["code" => 202, "message" => "last name for update not found"];
+    echo json_encode($responses);
+    exit();
+} 
+
+if(empty($update_role)) {
+    $responses["status"] = false;
+    $responses["error"]=["code" => 203, "message" => "role for update not found"]; 
+    echo json_encode($responses);
+    exit();
+} 
+
+if(!isset($update_status)) {
+    $responses["status"] = false;
+    $responses["error"]=["code" => 204, "message" => "status for update not found"];
+    echo json_encode($responses);
+    exit();
+} 
+
+$sql = "UPDATE `crud` SET `firstname` = '$update_first_name', `lastname` = '$update_last_name', `role` = '$update_role', `status` = '$update_status' WHERE `id`=$updateId";
+$result = mysqli_query($conn,$sql);
+
+$responses["status"] = true;
+$responses["error"] = null;
+$responses["user"] = ["id" => (int)$updateId, "firstname" => $update_first_name, "lastname" => $update_last_name, "statususer" => (int)$update_status, "role" => $arrRole[$update_role]];
+echo json_encode($responses);
+
 ?>
